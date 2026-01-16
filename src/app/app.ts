@@ -6,8 +6,8 @@ import { Navbar } from './navbar/navbar';
   selector: 'app-root',
   imports: [RouterOutlet, Navbar],
   templateUrl: './app.html',
-  styleUrl: './app.scss',
+  styleUrl: './app.scss'
 })
 export class App {
-  title = signal('client');
+  protected readonly title = signal('GangBro-client');
 }
