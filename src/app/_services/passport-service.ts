@@ -1,18 +1,32 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { LoginModel, Passport, RegisterModel } from '../_models/passport';
 
+import { getAvatar } from '../_helpers/avatar';
+
 @Injectable({
     providedIn: 'root'
 })
 export class PassportService {
+    image = computed(() => getAvatar(this.data()));
     private _storage_key = 'passport'
     private _api_url = environment.baseUrl
     private _http: HttpClient = inject(HttpClient)
 
     data = signal<Passport | undefined>(undefined)
+    avatar = signal<string>("")
+
+    saveAvatarImgUrl(url: string){
+        this.data.update(passport => {
+            if (passport) {
+                return { ...passport, avatar_url: url };
+            }
+            return passport;
+        });
+        this.savePassportToLocalStorage();
+    }
 
     constructor() {
         this.getPassportFromLocalStorage()
@@ -58,7 +72,7 @@ export class PassportService {
         return ''
     }
 
-    destroy(): void {
+    destroy() {
         localStorage.removeItem(this._storage_key)
         this.data.set(undefined)
     }
@@ -66,8 +80,6 @@ export class PassportService {
     async register(registerData: RegisterModel): Promise<string> {
         try {
             const url = this._api_url + '/brawlers/register'
-
-            // Challenge ! [เขียนโค้ด ที่นี่ เพื่อให้การทำงาน สมบูรณ์]
             const source: Observable<Passport> = this._http.post<Passport>(url, registerData)
             const passport: Passport = await firstValueFrom(source)
             this.data.set(passport)

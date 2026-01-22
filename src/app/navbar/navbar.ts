@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
-import { PassportService } from '../_service/passport-service';
+import { PassportService } from '../_services/passport-service';
 import { getAvatar } from '../_helpers/avatar';
 
 @Component({

@@ -31,18 +31,8 @@ export class ErrorService {
           this._snackbar.open('Invalid username or password', 'OK', this._snackBarConfig)
           break;
         case 500:
-        case 501:
-        case 502:
-        case 503:
-        case 504:
-        case 505:
-        case 506:
-        case 507:
-        case 508:
-        case 509:
-        case 510:
-        case 511:
-          this._snackbar.open('Invalid username or password', 'OK', this._snackBarConfig)
+          const navigationExtras: NavigationExtras = { state: { error: error.error } }
+          this._router.navigate(['/server-error'], navigationExtras)
           break;
         default:
           this._snackbar.open('something went wrong!! , please try again later', 'OK', this._snackBarConfig)

@@ -5,12 +5,13 @@ import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { routes } from './app.routes';
 import { loadingInterceptor } from './_interceptors/loading-interceptor';
 import { errorInterceptor } from './_interceptors/error-interceptor';
+import { jwtInterceptor } from './_interceptors/jwt-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([loadingInterceptor, errorInterceptor])),
+    provideHttpClient(withInterceptors([loadingInterceptor, errorInterceptor, jwtInterceptor])),
     {
       provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
       useValue: {
