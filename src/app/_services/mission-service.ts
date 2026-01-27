@@ -10,14 +10,14 @@ import { AddMission } from '../_models/add-mission';
   providedIn: 'root',
 })
 export class MissionService {
-  private _api_url = environment.baseUrl + '/view/filter';
+  private _api_url = environment.baseUrl;
   private _http = inject(HttpClient)
 
-  filter: MissionFilter = {  }
+  filter: MissionFilter = {}
 
   async get_all(filter: MissionFilter): Promise<Mission[]> {
     const queryString = this.createQueryString(filter);
-    const url = this._api_url + (queryString ? '?' + queryString : '');
+    const url = this._api_url + '/view/filter' + (queryString ? '?' + queryString : '');
     console.log('Fetching missions from:', url);
     return await firstValueFrom(this._http.get<Mission[]>(url));
   }
@@ -25,12 +25,12 @@ export class MissionService {
   async getByFilter(filter: MissionFilter): Promise<Mission[]> {
     return await this.get_all(filter);
   }
-  async add(mission:AddMission): Promise<number> {
-    const url = this._api_url + '/mission-managerment';
-    const observable = this._http.post<{mission_id:number}>(url, mission);
+  async add(mission: AddMission): Promise<number> {
+    const url = this._api_url + '/missions/create';
+    const observable = this._http.post<{ mission_id: number }>(url, mission);
     const resp = await firstValueFrom(observable);
     return resp.mission_id;
-}
+  }
 
   private createQueryString(filter: MissionFilter) {
     this.filter = filter
@@ -50,5 +50,5 @@ export class MissionService {
     const observable = this._http.get<Mission[]>(url);
     const resp = await firstValueFrom(observable);
     return resp;
-}
+  }
 }

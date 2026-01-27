@@ -16,7 +16,7 @@ export const routes: Routes = [
     { path: 'missions', component: Missions, canActivate: [authGuard], runGuardsAndResolvers: 'always' },
     { path: 'server-error', component: ServerError },
     {
-        path: 'chief',
+        path: 'my-missions',
         component: MissionManager,
         runGuardsAndResolvers: 'always',
         canActivate: [authGuard]
