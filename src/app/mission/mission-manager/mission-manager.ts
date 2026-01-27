@@ -40,6 +40,8 @@ export class MissionManager implements OnInit {
   isLoadingResults = true;
   isRateLimitReached = false;
   resultsLength = 0;
+  totalCrew = 0;
+  successRate = 100;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -56,6 +58,7 @@ export class MissionManager implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.resultsLength = missions.length;
+      this.calculateStats();
     } catch (e) {
       console.error(e);
       this.isRateLimitReached = true;
@@ -85,6 +88,14 @@ export class MissionManager implements OnInit {
       const currentMissions = this.dataSource.data;
       this.dataSource.data = [...currentMissions, newMission];
       this.resultsLength = this.dataSource.data.length;
+      this.calculateStats();
     });
+  }
+
+  private calculateStats() {
+    const missions = this.dataSource.data;
+    this.totalCrew = missions.reduce((acc, m) => acc + (m.crew_count || 0), 0);
+    const completed = missions.filter(m => m.status === 'Completed').length;
+    this.successRate = missions.length > 0 ? Math.round((completed / missions.length) * 100) : 100;
   }
 }

@@ -1,12 +1,26 @@
 import { Component, inject } from '@angular/core';
 import { AddMission } from '../../_models/add-mission';
-import { MatDialogRef, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
-import { MatAnchor } from "@angular/material/button";
+import { MatDialogRef, MatDialogContent, MatDialogActions, MatDialogTitle } from '@angular/material/dialog';
+import { MatButtonModule } from "@angular/material/button";
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-new-mission',
-  imports: [MatDialogContent, MatDialogActions, MatAnchor, FormsModule],
+  imports: [
+    CommonModule,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    FormsModule
+  ],
   templateUrl: './new-mission.html',
   styleUrl: './new-mission.scss',
 })

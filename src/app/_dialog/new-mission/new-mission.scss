@@ -1,0 +1,99 @@
+.premium-dialog-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 24px 16px !important;
+    margin: 0 !important;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: #1a1a1a;
+    border-bottom: 1px solid #f3f4f6;
+
+    mat-icon {
+        color: #1976d2;
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+    }
+
+    span {
+        letter-spacing: -0.5px;
+    }
+}
+
+.premium-dialog-content {
+    padding: 24px !important;
+    margin: 0 !important;
+
+    .mission-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding-top: 8px;
+
+        .full-width {
+            width: 100%;
+        }
+
+        ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+            font-size: 11px;
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        ::ng-deep .mat-mdc-text-field-wrapper {
+            background-color: #f9fafb !important;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background-color: #f3f4f6 !important;
+            }
+        }
+
+        mat-icon[matPrefix] {
+            margin-right: 12px;
+            color: #9ca3af;
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
+
+.premium-dialog-actions {
+    padding: 16px 24px 24px !important;
+    margin: 0 !important;
+    gap: 12px;
+    border-top: 1px solid #f3f4f6;
+
+    .cancel-btn {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 600;
+        color: #6b7280;
+        border-radius: 8px;
+        padding: 0 16px;
+
+        &:hover {
+            background: #f3f4f6;
+            color: #1a1a1a;
+        }
+    }
+
+    .create-btn {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 0 20px;
+        box-shadow: 0 4px 12px rgba(25, 118, 210, 0.2);
+        transition: all 0.2s ease;
+
+        &:hover:not([disabled]) {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(25, 118, 210, 0.3);
+        }
+
+        mat-icon {
+            margin-right: 4px;
+        }
+    }
+}
