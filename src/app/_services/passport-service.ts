@@ -17,8 +17,9 @@ export class PassportService {
 
     data = signal<Passport | undefined>(undefined)
     avatar = signal<string>("")
+    isSignin = signal<boolean>(false)
 
-    saveAvatarImgUrl(url: string){
+    saveAvatarImgUrl(url: string) {
         this.data.update(passport => {
             if (passport) {
                 return { ...passport, avatar_url: url };
@@ -38,6 +39,7 @@ export class PassportService {
         try {
             const passport: Passport = JSON.parse(jsonStr) as Passport
             this.data.set(passport)
+            this.isSignin.set(true)
         } catch (error) {
             console.error(error)
         }
@@ -48,6 +50,7 @@ export class PassportService {
         if (!passport) return
         const passportJson = JSON.stringify(passport)
         localStorage.setItem(this._storage_key, passportJson)
+        this.isSignin.set(true)
     }
 
     async login(loginData: LoginModel): Promise<string> {
@@ -75,6 +78,7 @@ export class PassportService {
     destroy() {
         localStorage.removeItem(this._storage_key)
         this.data.set(undefined)
+        this.isSignin.set(false)
     }
 
     async register(registerData: RegisterModel): Promise<string> {

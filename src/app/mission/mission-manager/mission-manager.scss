@@ -1,0 +1,87 @@
+.mission-manager-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .header-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+/* Structure from Angular Material Example */
+.example-container {
+  position: relative;
+  min-height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.example-table-container {
+  position: relative;
+  max-height: 600px;
+  overflow: auto;
+}
+
+.example-table {
+  width: 100%;
+}
+
+.example-loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-rate-limit-reached {
+  max-width: 360px;
+  text-align: center;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+
+  &.Open {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+
+  &.in_progress {
+    background-color: #fff3e0;
+    color: #f57c00;
+  }
+
+  &.completed {
+    background-color: #e8f5e9;
+    color: #388e3c;
+  }
+
+  &.failed {
+    background-color: #ffebee;
+    color: #d32f2f;
+  }
+}
+
+/* Table columns styling */
+.mat-column-name {
+  max-width: 200px;
+  font-weight: 500;
+}
+
+.mat-column-description {
+  color: #666;
+  font-style: italic;
+}

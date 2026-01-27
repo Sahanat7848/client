@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { MissionFilter } from '../_models/mission-filter';
 import { firstValueFrom } from 'rxjs';
 import { Mission } from '../_models/mission';
+import { AddMission } from '../_models/add-mission';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +25,13 @@ export class MissionService {
   async getByFilter(filter: MissionFilter): Promise<Mission[]> {
     return await this.get_all(filter);
   }
+  async add(mission:AddMission): Promise<number> {
+    const url = this._api_url + '/mission-managerment';
+    const observable = this._http.post<{mission_id:number}>(url, mission);
+    const resp = await firstValueFrom(observable);
+    return resp.mission_id;
+}
+
   private createQueryString(filter: MissionFilter) {
     this.filter = filter
     const params: string[] = []
@@ -37,4 +45,10 @@ export class MissionService {
 
     return params.join('&');
   }
+  async getMyMissions(): Promise<Mission[]> {
+    const url = this._api_url + '/brawlers/my-missions';
+    const observable = this._http.get<Mission[]>(url);
+    const resp = await firstValueFrom(observable);
+    return resp;
+}
 }
