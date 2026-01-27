@@ -1,38 +1,61 @@
-<mat-toolbar class="navbar">
-    <!-- Home button -->
-    <span class="home-btn" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-        Central Nexus
-    </span>
-    <button class = "menu-button" routerLink="/missions" routerLinkActive="active" >
-        <mat-icon>mission</mat-icon>
-        <span>Missions</span>
-    </button>
-    <button class = "button" routerLinkActive="active">My Missions</button>
-
-    <span class="spacer"></span>
-
-    @if (!isLoggedIn()) {
-    <button mat-button routerLink="/login" routerLinkActive="active" class="login-btn">
-        <mat-icon>login</mat-icon>
-        <span>Login</span>
-    </button>
-    } @else {
-    <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-btn">
-        <div class="profile-btn-content">
-            <img [src]="avatar_url()" class="avatar" [alt]="display_name() + ' avatar'">
-            <span class="display-name">{{display_name()}}</span>
+<nav class="navbar">
+    <div class="navbar-container">
+        <!-- Logo Section -->
+        <div class="logo-section" routerLink="/" routerLinkActive="logo-active"
+            [routerLinkActiveOptions]="{exact: true}">
+            <div class="logo-icon">
+                <mat-icon>hub</mat-icon>
+            </div>
+            <span class="logo-text">Central<span>Nexus</span></span>
         </div>
-    </button>
 
-    <mat-menu #profileMenu="matMenu" class="profile-menu" xPosition="before">
-        <button mat-menu-item routerLink="/profile">
-            <mat-icon>manage_accounts</mat-icon>
-            <span>Profile</span>
-        </button>
-        <button mat-menu-item (click)="logout()">
-            <mat-icon>logout</mat-icon>
-            <span>Logout</span>
-        </button>
-    </mat-menu>
-    }
-</mat-toolbar>
+        <!-- Navigation Links -->
+        <div class="nav-links">
+            <a class="nav-link" routerLink="/missions" routerLinkActive="active">
+                <mat-icon>explore</mat-icon>
+                <span>Missions</span>
+            </a>
+            @if (isLoggedIn()) {
+            <a class="nav-link" routerLink="/chief" routerLinkActive="active">
+                <mat-icon>stars</mat-icon>
+                <span>My Missions</span>
+            </a>
+            }
+        </div>
+
+        <span class="spacer"></span>
+
+        <!-- Action Items -->
+        <div class="nav-actions">
+            @if (!isLoggedIn()) {
+            <button mat-button routerLink="/login" class="login-btn-premium">
+                <mat-icon>login</mat-icon>
+                <span>Login</span>
+            </button>
+            } @else {
+            <div class="profile-container" [matMenuTriggerFor]="profileMenu">
+                <div class="profile-info">
+                    <span class="display-name">{{display_name()}}</span>
+                    <span class="role-tag">Agent</span>
+                </div>
+                <div class="avatar-wrapper">
+                    <img [src]="avatar_url()" class="avatar" [alt]="display_name() + ' avatar'">
+                    <div class="online-status"></div>
+                </div>
+                <mat-icon class="dropdown-icon">expand_more</mat-icon>
+            </div>
+
+            <mat-menu #profileMenu="matMenu" class="premium-profile-menu" xPosition="before">
+                <button mat-menu-item routerLink="/profile">
+                    <mat-icon>person_outline</mat-icon>
+                    <span>My Profile</span>
+                </button>
+                <button mat-menu-item (click)="logout()">
+                    <mat-icon>power_settings_new</mat-icon>
+                    <span class="logout-text">Sign Out</span>
+                </button>
+            </mat-menu>
+            }
+        </div>
+    </div>
+</nav>

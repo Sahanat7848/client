@@ -36,7 +36,7 @@ export class MissionManager implements OnInit {
   private _dialog = inject(MatDialog);
 
   dataSource = new MatTableDataSource<Mission>([]);
-  displayedColumns: string[] = ['name', 'description', 'status', 'chief_id', 'crew_count', 'created_at'];
+  displayedColumns: string[] = ['name', 'description', 'status', 'crew_count', 'created_at'];
   isLoadingResults = true;
   isRateLimitReached = false;
   resultsLength = 0;

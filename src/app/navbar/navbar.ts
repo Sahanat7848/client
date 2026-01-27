@@ -4,14 +4,15 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { RouterModule } from '@angular/router';
+import { MatDividerModule } from '@angular/material/divider';
 import { PassportService } from '../_services/passport-service';
+import { RouterModule } from '@angular/router';
 import { getAvatar } from '../_helpers/avatar';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, RouterModule, MatMenuModule],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, RouterModule, MatMenuModule, MatDividerModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
   encapsulation: ViewEncapsulation.None
