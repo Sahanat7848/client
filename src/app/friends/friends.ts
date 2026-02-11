@@ -72,26 +72,32 @@ export class Friends implements OnInit {
         }
     }
 
+    // ฟังก์ชันสำหรับกดเพิ่มเพื่อน
     async addFriend(friend: BrawlerSummary) {
+        // ป้องกันการกดซ้ำขณะกำลังประมวลผล
         if (this.isAdding()) return;
 
-        console.log('Attempting to connect with agent:', friend);
-        this.isAdding.set(true);
+        this.isAdding.set(true); // แสดงสถานะกำลังโหลด
         try {
+            // ส่งคำสั่งไปยัง Server เพื่อทำการเชื่อมต่อกับเพื่อนคนนี้
             await this._friendsService.addFriend(friend.id);
-            this._snackBar.open(`Established connection with ${friend.display_name}!`, 'Success', {
+
+            // แสดงข้อความแจ้งเตือนเมื่อสำเร็จ
+            this._snackBar.open(`เชื่อมต่อกับ ${friend.display_name} สำเร็จ!`, 'Success', {
                 duration: 3000,
                 panelClass: 'success-snackbar'
             });
+
+            // เคลียร์ค่าที่ค้นหาและโหลดรายชื่อเพื่อนใหม่
             this.searchResults.set(null);
             this.searchQuery = '';
             await this.loadFriends();
         } catch (error: any) {
-            console.error('Connection failed:', error);
-            const msg = typeof error.error === 'string' ? error.error : (error.error?.message || 'Failed to establish connection');
-            this._snackBar.open(msg, 'Protocol Error', { duration: 5000 });
+            console.error('การเชื่อมต่อล้มเหลว:', error);
+            const msg = typeof error.error === 'string' ? error.error : (error.error?.message || 'ไม่สามารถสร้างการเชื่อมต่อได้');
+            this._snackBar.open(msg, 'ข้อผิดพลาด', { duration: 5000 });
         } finally {
-            this.isAdding.set(false);
+            this.isAdding.set(false); // ปิดสถานะกำลังโหลด
         }
     }
 

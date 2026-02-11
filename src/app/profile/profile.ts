@@ -93,28 +93,40 @@ export class Profile implements OnInit {
     }
   }
 
+  // ฟังก์ชันสำหรับสลับโหมดการแก้ไขชื่อ
   toggleEditName(): void {
     if (!this.isEditingName()) {
+      // เมื่อเริ่มแก้ไข ให้เอาชื่อปัจจุบันไปใส่ในช่อง Input สำรอง (tempName)
       this.tempName.set(this.displayName());
-      this.isEditingName.set(true);
+      this.isEditingName.set(true); // เปิดโหมดแก้ไข
     } else {
-      this.isEditingName.set(false);
+      this.isEditingName.set(false); // ปิดโหมดแก้ไข
     }
   }
 
+  // ฟังก์ชันสำหรับบันทึกชื่อใหม่
   async saveName(): Promise<void> {
     const newName = this.tempName().trim();
+
+    // ถ้าชื่อว่าง หรือเป็นชื่อเดิม ไม่ต้องส่งไปที่ Server
     if (!newName || newName === this.displayName()) {
       this.isEditingName.set(false);
       return;
     }
 
-    const error = await this._userService.updateDisplayName(newName);
-    if (error) {
-      this._snackBar.open(error, 'Close', { duration: 5000, panelClass: 'error-snackbar' });
-    } else {
-      this._snackBar.open('Display name updated!', 'Success', { duration: 3000 });
-      this.isEditingName.set(false);
+    try {
+      // เรียกใช้ Service เพื่ออัปเดตชื่อในฐานข้อมูล
+      const error = await this._userService.updateDisplayName(newName);
+
+      if (error) {
+        this._snackBar.open(error, 'Close', { duration: 5000, panelClass: 'error-snackbar' });
+      } else {
+        // แสดงข้อความสำเร็จและปิดโหมดแก้ไข
+        this._snackBar.open('เปลี่ยนชื่อสำเร็จแล้ว!', 'Success', { duration: 3000 });
+        this.isEditingName.set(false);
+      }
+    } catch (e) {
+      console.error('ไม่สามารถอัปเดตชื่อได้:', e);
     }
   }
 

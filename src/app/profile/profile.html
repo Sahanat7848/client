@@ -37,13 +37,13 @@
           <input type="text" [(ngModel)]="tempName" class="name-field" (keyup.enter)="saveName()"
             (keyup.escape)="toggleEditName()" autofocus>
           <div class="edit-tools">
-            <button class="tool-btn save" (click)="saveName()"><mat-icon>done_all</mat-icon></button>
+            <button class="tool-btn save" (click)="saveName()"><mat-icon>check</mat-icon></button>
             <button class="tool-btn cancel" (click)="toggleEditName()"><mat-icon>close</mat-icon></button>
           </div>
         </div>
 
         <div class="rank-badge">
-          <mat-icon>verified_user</mat-icon>
+          <mat-icon>verified</mat-icon>
           <span>{{ stats.rank }}</span>
         </div>
       </div>

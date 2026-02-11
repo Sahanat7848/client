@@ -53,33 +53,37 @@ export class ChatDialog implements OnInit {
         this.loadMessages();
     }
 
+    // ฟังก์ชันสำหรับโหลดข้อความแชท
     async loadMessages() {
         try {
-            console.log('Fetching decryption keys for conversation with agent:', this.data.friend.id);
+            // เรียกใช้ Service เพื่อดึงประวัติการคุยกับเพื่อนคนนี้
             const msgs = await this._messageService.get_conversation(this.data.friend.id);
-            console.log('Synchronized logs found:', msgs.length);
-            // Only update if messages changed to avoid jitter
+
+            // ตรวจสอบว่ามีข้อความใหม่หรือไม่ (เปรียบเทียบจำนวนข้อความ)
+            // เพื่อหลีกเลี่ยงการกระตุกของหน้าจอหากไม่มีข้อมูลเปลี่ยนแปลง
             if (msgs.length !== this.messages().length) {
-                this.messages.set(msgs);
+                this.messages.set(msgs); // อัปเดตข้อความใหม่
+                // หน่วงเวลาเล็กน้อยเพื่อให้ UI เรนเดอร์เสร็จก่อนเลื่อนลงล่างสุด
                 setTimeout(() => this.scrollToBottom(), 100);
             }
         } catch (error) {
-            console.error('FAILED TO SYNCHRONIZE COMM LOGS:', error);
+            console.error('ไม่สามารถโหลดข้อมูลประวัติการแชทได้:', error);
         }
     }
 
+    // ฟังก์ชันสำหรับส่งข้อความ
     async sendMessage() {
         const content = this.newMessage.trim();
-        if (!content) return;
+        if (!content) return; // ถ้าไม่มีข้อความ ไม่ต้องทำอะไร
 
         try {
-            console.log('Transmitting burst to agent:', this.data.friend.id);
+            // ส่งข้อความไปยัง Server
             await this._messageService.send_message(this.data.friend.id, content);
-            console.log('Transmission successful');
-            this.newMessage = '';
-            await this.loadMessages();
+
+            this.newMessage = ''; // เคลียร์ช่อง Input
+            await this.loadMessages(); // โหลดข้อความใหม่ทันทีเพื่อให้เห็นข้อความที่เราเพิ่งส่ง
         } catch (error) {
-            console.error('TRANSMISSION_FAILURE:', error);
+            console.error('การส่งข้อความล้มเหลว:', error);
         }
     }
 

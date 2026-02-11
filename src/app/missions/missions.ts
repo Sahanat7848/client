@@ -110,45 +110,51 @@ export class Missions implements AfterViewInit, OnInit {
     this.onSubmit();
   }
 
+  // ฟังก์ชันสำหรับกดเข้าร่วมภารกิจ
   async joinMission(mission: Mission) {
+    // ตรวจสอบก่อนว่าเราเป็นหัวหน้าหรือเข้าร่วมไปแล้วหรือไม่
     if (mission.is_chief || mission.is_joined) return;
 
-    // Optimistic Update
-    const prevStatus = mission.is_joined;
-    const prevCount = mission.crew_count;
-    mission.is_joined = true;
-    mission.crew_count++;
+    // --- ส่วนของ Optimistic Update (เปลี่ยนหน้าจอทันทีเพื่อให้ดูเร็ว) ---
+    const prevStatus = mission.is_joined; // เก็บสถานะเก่าไว้เผื่อต้องย้อนกลับ
+    const prevCount = mission.crew_count; // เก็บจำนวนคนเก่าไว้
+    mission.is_joined = true;             // เปลี่ยนสถานะเป็น "เข้าร่วมแล้ว" ทันที
+    mission.crew_count++;                // เพิ่มจำนวนคนขึ้น 1 คนทันที
 
     try {
+      // ส่งคำสั่งไปยัง Server เพื่อบันทึกลงฐานข้อมูลจริง
       await this._missionService.joinMission(mission.id);
-      // Background refresh to stay in sync
+      // ดึงข้อมูลใหม่มาอัปเดตหน้าจออีกครั้งเพื่อความแม่นยำ
       this.onSubmit();
     } catch (e) {
-      // Revert on error
+      // หากเกิดข้อผิดพลาด ให้ดึงข้อมูลเก่ากลับมาแสดงผล
       mission.is_joined = prevStatus;
       mission.crew_count = prevCount;
-      console.error('Error joining mission:', e);
+      console.error('เกิดข้อผิดพลาดในการเข้าร่วมภารกิจ:', e);
     }
   }
 
+  // ฟังก์ชันสำหรับกดออกจากภารกิจ
   async leaveMission(mission: Mission) {
+    // ตรวจสอบว่าไม่ใช่หัวหน้า และต้องอยู่ในภารกิจนั้นจริงๆ
     if (mission.is_chief || !mission.is_joined) return;
 
-    // Optimistic Update
+    // --- ส่วนของ Optimistic Update (ลดจำนวนคนทันทีโดยไม่ต้องรอ Server) ---
     const prevStatus = mission.is_joined;
     const prevCount = mission.crew_count;
-    mission.is_joined = false;
-    mission.crew_count--;
+    mission.is_joined = false; // เปลี่ยนสถานะเป็น "ยังไม่ได้เข้าร่วม" ทันที
+    mission.crew_count--;      // ลดจำนวนคนลง 1 คนทันที
 
     try {
+      // ส่งคำสั่งไปยัง Server เพื่อลบชื่อเราออก
       await this._missionService.leaveMission(mission.id);
-      // Background refresh to stay in sync
+      // อัปเดตข้อมูลหน้าจอใหม่
       this.onSubmit();
     } catch (e) {
-      // Revert on error
+      // หากล้มเหลว ให้กลับไปใช้ค่าเดิม
       mission.is_joined = prevStatus;
       mission.crew_count = prevCount;
-      console.error('Error leaving mission:', e);
+      console.error('เกิดข้อผิดพลาดในการออกจากภารกิจ:', e);
     }
   }
 }
