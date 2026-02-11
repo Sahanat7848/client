@@ -1,4 +1,5 @@
 import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
@@ -10,6 +11,7 @@ import { jwtInterceptor } from './_interceptors/jwt-interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideAnimations(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([loadingInterceptor, errorInterceptor, jwtInterceptor])),
     {

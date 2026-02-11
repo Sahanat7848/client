@@ -1,30 +1,38 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { PassportService } from '../_services/passport-service';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule
+  ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class Home {
-  private _passport = inject(PassportService)
+export class Home implements OnInit, OnDestroy {
+  private _passport = inject(PassportService);
+  private router = inject(Router);
 
-  constructor(private router: Router) {
-    if (!this._passport.data())
-      this.router.navigate(['/login'])
+  constructor() {
+    if (!this._passport.data()) {
+      this.router.navigate(['/login']);
+    }
   }
 
-  private _http = inject(HttpClient)
-  makeError(code: number) {
-    const baseUrl = environment.baseUrl + '/util/make-error/' + code
-    this._http.get(baseUrl).subscribe({
-      error: (err) => {
-        console.log(err)
-      }
-    })
+  ngOnInit() {
+  }
+
+  navigate(path: string) {
+    this.router.navigate([path]);
+  }
+
+  ngOnDestroy() {
   }
 }

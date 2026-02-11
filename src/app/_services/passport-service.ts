@@ -29,6 +29,16 @@ export class PassportService {
         this.savePassportToLocalStorage();
     }
 
+    updateDisplayName(newName: string) {
+        this.data.update(passport => {
+            if (passport) {
+                return { ...passport, display_name: newName };
+            }
+            return passport;
+        });
+        this.savePassportToLocalStorage();
+    }
+
     constructor() {
         this.getPassportFromLocalStorage()
     }

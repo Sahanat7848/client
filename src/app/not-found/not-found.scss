@@ -1,255 +1,342 @@
-.cls-1 {
-  fill: #ffc541;
-}
+.not-found-container {
+  --primary: #ff85a1;
+  --danger: #ff85a1;
+  --bg: transparent;
+  --border: rgba(255, 133, 161, 0.15);
+  --text-muted: #a1a1aa;
 
-.cls-2 {
-  fill: #4e4066;
-}
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Fredoka', sans-serif;
 
-.cls-3 {
-  fill: #6f5b92;
-}
-
-.cls-4 {
-  fill: #f78d5e;
-}
-
-.cls-5 {
-  fill: #fa976c;
-}
-
-.cls-6,
-.cls-7,
-.cls-8 {
-  fill: #b65c32;
-}
-
-.cls-10,
-.cls-6 {
-  opacity: 0.6;
-}
-
-.cls-7 {
-  opacity: 0.4;
-}
-
-.cls-9 {
-  fill: #f4b73b;
-}
-
-.cls-11 {
-  fill: #f9c358;
-}
-
-.cls-12 {
-  fill: #9b462c;
-}
-
-.cls-13 {
-  fill: #aa512e;
-}
-
-.cls-14 {
-  fill: #7d6aa5;
-}
-
-
-/* animations */
-
-.wheel {
-  animation: wheel-rotate 6s ease infinite;
-  transform-origin: center;
-  transform-box: fill-box;
-}
-
-@keyframes wheel-rotate {
-  50% {
-    transform: rotate(360deg);
-    animation-timing-function: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  // --- BACKGROUND DECOR ---
+  .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.1;
+    pointer-events: none;
   }
-  100% {
-    transform: rotate(960deg)
+
+  .scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(to bottom, transparent, rgba(255, 133, 161, 0.05), transparent);
+    animation: scanVertical 10s infinite linear;
+    pointer-events: none;
+  }
+
+  // --- CONTENT BOX ---
+  .content-box {
+    width: 100%;
+    max-width: 550px;
+    background: rgba(26, 22, 37, 0.85);
+    backdrop-filter: blur(30px);
+    border: 2px solid var(--border);
+    border-radius: 48px;
+    padding: 60px;
+    position: relative;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+    text-align: center;
+
+    &.animate-in {
+      animation: boxCutePop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  }
+
+  .error-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+
+    .protocol-label {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .status-pill {
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+
+      &.red {
+        background: rgba(255, 133, 161, 0.15);
+        color: var(--danger);
+        border: 1px solid rgba(255, 133, 161, 0.2);
+      }
+    }
+  }
+
+  // --- GLITCH 404 ---
+  .glitch-wrapper {
+    margin-bottom: 32px;
+
+    .error-code {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 9rem;
+      font-weight: 900;
+      color: #fff;
+      margin: 0;
+      line-height: 1;
+      position: relative;
+      display: inline-block;
+      letter-spacing: -4px;
+      filter: drop-shadow(0 0 20px rgba(255, 133, 161, 0.2));
+
+      &::before,
+      &::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.6;
+      }
+
+      &::before {
+        color: var(--primary);
+        left: -3px;
+        animation: cute-glitch 2s infinite linear alternate-reverse;
+      }
+
+      &::after {
+        color: #a183ff;
+        left: 3px;
+        animation: cute-glitch 3s infinite linear alternate-reverse;
+      }
+    }
+  }
+
+  .message-section {
+    margin-bottom: 48px;
+
+    .error-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .error-desc {
+      color: #a1a1aa;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      max-width: 380px;
+      margin: 0 auto;
+      font-weight: 500;
+    }
+  }
+
+  // --- BUTTON AREA ---
+  .action-portal {
+    position: relative;
+    display: flex;
+    justify-content: center;
+
+    .reconnect-btn {
+      height: 64px;
+      padding: 0 40px;
+      background: var(--primary);
+      border: none;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 15px 30px rgba(255, 133, 161, 0.3);
+
+      &:hover {
+        transform: translateY(-4px) rotate(2deg);
+        box-shadow: 0 20px 40px rgba(255, 133, 161, 0.4);
+      }
+
+      mat-icon {
+        font-size: 24px;
+        width: auto;
+        height: auto;
+      }
+    }
+  }
+
+  .error-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 700;
+
+    .diag-bits {
+      display: flex;
+      gap: 16px;
+    }
+
+    .loc-id {
+      font-weight: 800;
+      color: var(--primary);
+    }
   }
 }
 
-.clock-hand-1 {
-  animation: clock-rotate 3s linear infinite;
-  transform-origin: bottom;
-  transform-box: fill-box;
-}
+// --- ANIMATIONS ---
+@keyframes scanVertical {
+  from {
+    transform: translateY(-100vh);
+  }
 
-.clock-hand-2 {
-  animation: clock-rotate 6s linear infinite;
-  transform-origin: bottom;
-  transform-box: fill-box;
-}
-
-@keyframes clock-rotate {
-  100% {
-    transform: rotate(360deg)
+  to {
+    transform: translateY(100vh);
   }
 }
 
-#box-top {
-  animation: box-top-anim 2s linear infinite;
-  transform-origin: right top;
-  transform-box: fill-box;
-}
+@keyframes boxCutePop {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(40px);
+  }
 
-@keyframes box-top-anim {
-  50% {
-    transform: rotate(-5deg)
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
 
-#umbrella {
-  animation: umbrella-anim 6s linear infinite;
-  transform-origin: center;
-  transform-box: fill-box;
-}
-
-@keyframes umbrella-anim {
-  25% {
-    transform: translateY(10px) rotate(5deg);
-  }
-  75% {
-    transform: rotate(-5deg);
-  }
-}
-
-#cup {
-  animation: cup-rotate 3s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
-  transform-origin: top left;
-  transform-box: fill-box;
-}
-
-@keyframes cup-rotate {
-  50% {
-    transform: rotate(-5deg)
-  }
-}
-
-#pillow {
-  animation: pillow-anim 3s linear infinite;
-  transform-origin: center;
-  transform-box: fill-box;
-}
-
-@keyframes pillow-anim {
-  25% {
-    transform: rotate(10deg) translateY(5px)
-  }
-  75% {
-    transform: rotate(-10deg)
-  }
-}
-
-#stripe {
-  animation: stripe-anim 3s linear infinite;
-  transform-origin: center;
-  transform-box: fill-box;
-}
-
-@keyframes stripe-anim {
-  25% {
-    transform: translate(10px, 0) rotate(-10deg)
-  }
-  75% {
-    transform: translateX(10px)
-  }
-}
-
-#bike {
-  animation: bike-anim 6s ease infinite;
-}
-
-@keyframes bike-anim {
+@keyframes cute-glitch {
   0% {
-    transform: translateX(-1300px)
+    transform: translate(0);
+    clip-path: inset(10% 0 80% 0);
   }
-  50% {
-    transform: translateX(0);
-    animation-timing-function: cubic-bezier(0.47, 0, 0.745, 0.715);
+
+  20% {
+    transform: translate(-2px, 2px);
+    clip-path: inset(40% 0 30% 0);
   }
+
+  40% {
+    transform: translate(2px, -2px);
+    clip-path: inset(70% 0 10% 0);
+  }
+
+  60% {
+    transform: translate(-2px, -2px);
+    clip-path: inset(20% 0 60% 0);
+  }
+
+  80% {
+    transform: translate(2px, 2px);
+    clip-path: inset(50% 0 40% 0);
+  }
+
   100% {
-    transform: translateX(1300px)
+    transform: translate(0);
+    clip-path: inset(80% 0 5% 0);
   }
 }
 
-#rucksack {
-  animation: ruck-anim 3s linear infinite;
-  transform-origin: top;
-  transform-box: fill-box;
-}
 
-@keyframes ruck-anim {
-  50% {
-    transform: rotate(5deg)
+// --- ANIMATIONS ---
+@keyframes scanVertical {
+  from {
+    transform: translateY(-100vh);
+  }
+
+  to {
+    transform: translateY(100vh);
   }
 }
 
-.circle {
-  animation: circle-anim ease infinite;
-  transform-origin: center;
-  transform-box: fill-box;
-  perspective: 0px;
-}
+@keyframes boxEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(40px);
+  }
 
-.circle.c1 {
-  animation-duration: 2s
-}
-
-.circle.c2 {
-  animation-duration: 3s
-}
-
-.circle.c3 {
-  animation-duration: 1s
-}
-
-.circle.c4 {
-  animation-duration: 1s
-}
-
-.circle.c5 {
-  animation-duration: 2s
-}
-
-.circle.c6 {
-  animation-duration: 3s
-}
-
-@keyframes circle-anim {
-  50% {
-    transform: scale(.2) rotateX(360deg) rotateY(360deg)
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
 
-.four,
-#ou {
-  animation: four-anim cubic-bezier(0.39, 0.575, 0.565, 1) infinite;
+@keyframes glitch-anim {
+  0% {
+    clip: rect(44px, 450px, 56px, 0);
+  }
+
+  20% {
+    clip: rect(12px, 450px, 22px, 0);
+  }
+
+  40% {
+    clip: rect(67px, 450px, 78px, 0);
+  }
+
+  60% {
+    clip: rect(5px, 450px, 15px, 0);
+  }
+
+  80% {
+    clip: rect(32px, 450px, 42px, 0);
+  }
+
+  100% {
+    clip: rect(89px, 450px, 98px, 0);
+  }
 }
 
-.four.a {
-  transform-origin: bottom left;
-  animation-duration: 3s;
-  transform-box: fill-box;
-}
+@keyframes glitch-anim2 {
+  0% {
+    clip: rect(12px, 450px, 22px, 0);
+  }
 
-.four.b {
-  transform-origin: bottom right;
-  animation-duration: 3s;
-  transform-box: fill-box;
-}
+  20% {
+    clip: rect(89px, 450px, 98px, 0);
+  }
 
-#ou {
-  animation-duration: 6s;
-  transform-origin: center;
-  transform-box: fill-box;
-}
+  40% {
+    clip: rect(44px, 450px, 56px, 0);
+  }
 
-@keyframes four-anim {
-  50% {
-    transform: scale(.98)
+  60% {
+    clip: rect(67px, 450px, 78px, 0);
+  }
+
+  80% {
+    clip: rect(5px, 450px, 15px, 0);
+  }
+
+  100% {
+    clip: rect(32px, 450px, 42px, 0);
   }
 }

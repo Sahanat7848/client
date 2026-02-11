@@ -42,6 +42,9 @@ export class MissionService {
     if (filter.status) {
       params.push(`status=${encodeURIComponent(filter.status)}`)
     }
+    if (filter.brawler_id) {
+      params.push(`brawler_id=${filter.brawler_id}`)
+    }
 
     return params.join('&');
   }
@@ -50,5 +53,15 @@ export class MissionService {
     const observable = this._http.get<Mission[]>(url);
     const resp = await firstValueFrom(observable);
     return resp;
+  }
+
+  async joinMission(missionId: number): Promise<void> {
+    const url = `${this._api_url}/crew_operation/join/${missionId}`;
+    await firstValueFrom(this._http.post(url, {}));
+  }
+
+  async leaveMission(missionId: number): Promise<void> {
+    const url = `${this._api_url}/crew_operation/leave/${missionId}`;
+    await firstValueFrom(this._http.delete(url));
   }
 }

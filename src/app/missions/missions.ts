@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, AfterViewInit, computed, Signal } from '@angular/core';
+import { Component, inject, ViewChild, AfterViewInit, computed, Signal, OnInit } from '@angular/core';
 import { PassportService } from '../_services/passport-service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-missions',
@@ -36,9 +37,11 @@ import { MatCardModule } from '@angular/material/card';
   templateUrl: './missions.html',
   styleUrl: './missions.scss',
 })
-export class Missions implements AfterViewInit {
+export class Missions implements AfterViewInit, OnInit {
   private _missionService = inject(MissionService);
   private _passportService = inject(PassportService);
+  private _route = inject(ActivatedRoute);
+  private _router = inject(Router);
 
   isSignin: Signal<boolean>;
 
@@ -57,9 +60,18 @@ export class Missions implements AfterViewInit {
 
   constructor() {
     this.isSignin = computed(() => this._passportService.isSignin());
+  }
 
-    this.filter = this._missionService.filter;
-    this.onSubmit();
+  async ngOnInit() {
+    this._route.queryParams.subscribe(params => {
+      const brawlerId = params['brawler_id'];
+      if (brawlerId) {
+        this.filter.brawler_id = Number(brawlerId);
+      } else {
+        this.filter = this._missionService.filter;
+      }
+      this.onSubmit();
+    });
   }
 
   ngAfterViewInit() {
@@ -71,6 +83,19 @@ export class Missions implements AfterViewInit {
     this.isLoading = true;
     try {
       const results = await this._missionService.getByFilter(this.filter);
+
+      // If signed in, enrich missions with join status
+      if (this.isSignin()) {
+        const myMissions = await this._missionService.getMyMissions();
+        const myMissionIds = new Set(myMissions.map(m => m.id));
+        const currentUser = this._passportService.data();
+
+        results.forEach(m => {
+          m.is_joined = myMissionIds.has(m.id);
+          m.is_chief = m.chief_id === currentUser?.brawler_id || m.chief_display_name === currentUser?.display_name;
+        });
+      }
+
       this.dataSource.data = results;
     } catch (e) {
       console.error('Error fetching missions:', e);
@@ -80,7 +105,50 @@ export class Missions implements AfterViewInit {
   }
 
   clearFilter() {
-    this.filter = { name: undefined, status: undefined };
+    this.filter = { name: undefined, status: undefined, brawler_id: undefined };
+    this._router.navigate([], { relativeTo: this._route, queryParams: {} });
     this.onSubmit();
+  }
+
+  async joinMission(mission: Mission) {
+    if (mission.is_chief || mission.is_joined) return;
+
+    // Optimistic Update
+    const prevStatus = mission.is_joined;
+    const prevCount = mission.crew_count;
+    mission.is_joined = true;
+    mission.crew_count++;
+
+    try {
+      await this._missionService.joinMission(mission.id);
+      // Background refresh to stay in sync
+      this.onSubmit();
+    } catch (e) {
+      // Revert on error
+      mission.is_joined = prevStatus;
+      mission.crew_count = prevCount;
+      console.error('Error joining mission:', e);
+    }
+  }
+
+  async leaveMission(mission: Mission) {
+    if (mission.is_chief || !mission.is_joined) return;
+
+    // Optimistic Update
+    const prevStatus = mission.is_joined;
+    const prevCount = mission.crew_count;
+    mission.is_joined = false;
+    mission.crew_count--;
+
+    try {
+      await this._missionService.leaveMission(mission.id);
+      // Background refresh to stay in sync
+      this.onSubmit();
+    } catch (e) {
+      // Revert on error
+      mission.is_joined = prevStatus;
+      mission.crew_count = prevCount;
+      console.error('Error leaving mission:', e);
+    }
   }
 }

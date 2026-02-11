@@ -8,6 +8,8 @@ import {
   MatDialogClose,
 } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-upload-photo',
@@ -17,6 +19,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatDialogActions,
     MatButtonModule,
     MatDialogClose,
+    MatIconModule,
+    CommonModule,
   ],
   templateUrl: './upload-photo.html',
   styleUrl: './upload-photo.scss',

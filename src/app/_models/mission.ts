@@ -10,4 +10,7 @@ export interface Mission {
     crew_count: number;
     created_at: Date;
     updated_at: Date;
+    // Client-side only properties
+    is_joined?: boolean;
+    is_chief?: boolean;
 }
